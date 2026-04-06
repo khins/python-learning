@@ -76,6 +76,58 @@ def exercises():
 
     return averages, top
 
+from collections import namedtuple
+
+def namedtuple_example():
+    Point = namedtuple('Point', ['x', 'y'])
+    
+    p = Point(10, 20)
+    
+    return {
+        "object": p,
+        "by_attr": p.x,
+        "by_index": p[1]
+    }
+
+from dataclasses import dataclass
+
+def dataclass_example():
+    
+    @dataclass
+    class Point:
+        x: int
+        y: int
+
+    p = Point(10, 20)
+    
+    # mutate value
+    p.x = 30
+
+    return {
+        "object": p,
+        "x": p.x,
+        "y": p.y
+    }
+
+from typing import TypedDict
+
+def typeddict_example():
+    
+    class Point(TypedDict):
+        x: int
+        y: int
+
+    p: Point = {"x": 10, "y": 20}
+    
+    # mutate like normal dict
+    p["x"] = 30
+
+    return {
+        "object": p,
+        "x": p["x"],
+        "y": p["y"]
+    }
+
 
 if __name__ == '__main__':
     print('Deque demo:', deque_demo())
@@ -85,3 +137,11 @@ if __name__ == '__main__':
     print('OrderedDict demo:', ordered_dict_demo())
     print('ChainMap demo:', chainmap_demo())
     print('Exercises solutions:', exercises())
+    print("=== namedtuple ===")
+    print(namedtuple_example())
+    
+    print("\n=== dataclass ===")
+    print(dataclass_example())
+    
+    print("\n=== TypedDict ===")
+    print(typeddict_example())
