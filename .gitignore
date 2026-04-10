@@ -26,3 +26,6 @@ dist/
 
 # Local Codex state
 .codex
+
+# Personal walkthrough practice files
+*walkthrough.py
