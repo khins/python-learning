@@ -29,3 +29,6 @@ dist/
 
 # Personal walkthrough practice files
 *walkthrough.py
+
+# Local demo output files
+*_demo.json
