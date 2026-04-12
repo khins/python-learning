@@ -5,7 +5,15 @@ Week 5 practice: type hints and dataclasses.
 from dataclasses import dataclass
 from typing import Optional
 
+"""
+The new concept is @dataclass, which is Python’s shortcut for 
+classes that mostly store data.
 
+The @dataclass decorator automatically generates 
+__init__, __repr__, __eq__, and other methods based on the 
+class attributes you define. This saves you from writing boilerplate
+code for simple classes.
+"""
 @dataclass
 class Lesson:
     title: str
