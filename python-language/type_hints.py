@@ -2,6 +2,24 @@
 Python type hints: typing module, generics, protocols, and static checking.
 
 Run this file to see examples and output.
+
+Basic function: def add_numbers(a: int, b: int) -> int:
+Optional value: age: Optional[int] means int | None
+Union of types: value: Union[int, str, float]
+Generic type variable: T = TypeVar('T')
+Generic list function: def first_item(items: List[T]) -> Optional[T]:
+Generic class: class Stack(Generic[T]):
+Protocol: define required behavior, not inheritance
+Callable: Callable[[int], int] means takes int, returns int
+
+Quick memorize-this rules
+
+Optional[X] means maybe None.
+Union[A, B] means either type is allowed.
+TypeVar keeps input/output types connected.
+Generic[T] makes reusable typed classes.
+Protocol means “anything with this method shape is valid.”
+Callable[[A], B] describes a function signature.
 """
 
 from typing import List, Dict, Optional, Union, Callable, Protocol, TypeVar, Generic
