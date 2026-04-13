@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: postgres_basics",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/python-language/postgres_basics.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        "DATABASE_URL": "postgresql://python_student:python_student@localhost:5432/my_first_python_app"
+      }
+    }
+  ]
+}
