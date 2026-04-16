@@ -1,45 +1,70 @@
-# 13_error_handling_and_logging.py
+"""
+Lesson 13: Error Handling and Logging
+"""
+
 import logging
-from pathlib import Path    
-# Configure logging
+from pathlib import Path
+
+
+# ---------------------------
+# Setup logging
+# ---------------------------
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler("app.log"),
-        logging.StreamHandler()
-    ]
+    format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+
+# ---------------------------
+# Example 1: Basic try/except
+# ---------------------------
+def safe_divide(a: float, b: float) -> float:
+    try:
+        return a / b
+    except ZeroDivisionError:
+        logging.error("Attempted division by zero")
+        return 0
+
+
+# ---------------------------
+# Example 2: File handling
+# ---------------------------
 def read_file(path: Path) -> str:
     try:
-        content = path.read_text(encoding="utf-8")
-        logging.info(f"Successfully read file: {path}")
-        return content
+        return path.read_text()
     except FileNotFoundError:
-        logging.error(f"File not found: {path}")
+        logging.warning(f"File not found: {path}")
         return ""
-    except Exception as e:
-        logging.error(f"Error reading file {path}: {e}")
-        return ""
-    
-def divide_numbers(a: float, b: float) -> float:
+
+
+# ---------------------------
+# Example 3: Custom exception
+# ---------------------------
+class InvalidDataError(Exception):
+    pass
+
+
+def process_data(value: int) -> int:
+    if value < 0:
+        raise InvalidDataError("Value must be positive")
+    return value * 2
+
+
+# ---------------------------
+# Demo runner
+# ---------------------------
+def run_demo():
+    print("Safe divide:", safe_divide(10, 0))
+
+    print("\nFile read:")
+    print(read_file(Path("missing.txt")))
+
+    print("\nCustom exception:")
     try:
-        result = a / b
-        logging.info(f"Division successful: {a} / {b} = {result}")
-        return result
-    except ZeroDivisionError:
-        logging.error("Attempted to divide by zero.")
-        return float('inf')  # Return infinity as a fallback
-    except Exception as e:
-        logging.error(f"Error during division: {e}")
-        return float('nan')  # Return NaN as a fallback
-    
-# Main execution
+        process_data(-5)
+    except InvalidDataError as e:
+        logging.error(f"Custom error: {e}")
+
+
 if __name__ == "__main__":
-    # Example usage of read_file
-    file_content = read_file(Path("example.txt"))
-    
-    # Example usage of divide_numbers
-    result1 = divide_numbers(10, 2)
-    result2 = divide_numbers(10, 0)
+    run_demo()
