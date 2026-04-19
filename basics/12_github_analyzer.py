@@ -1,7 +1,21 @@
 # 12_github_analyzer.py
 from dataclasses import dataclass
+import logging
+from pathlib import Path
 
 import requests
+
+
+LOG_FILE = Path(__file__).resolve().parent.parent / "app.log"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler(LOG_FILE, encoding="utf-8"),
+    ],
+)
 
 
 @dataclass
@@ -18,14 +32,61 @@ class RepoSummary:
     most_starred_stars: int
 
 
+class InvalidUsernameError(Exception):
+    pass
+
+
+class RepoFetchError(Exception):
+    pass
+
+
+def validate_username(username: str) -> str:
+    cleaned_username = username.strip()
+
+    if not cleaned_username:
+        raise InvalidUsernameError("GitHub username cannot be empty.")
+
+    return cleaned_username
+
+
 def fetch_repo_data(username: str) -> list[dict]:
     url = f"https://api.github.com/users/{username}/repos"
-    response = requests.get(url)
 
-    if response.status_code != 200:
-        print("Could not fetch repos.")
-        return []
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        status_code = error.response.status_code if error.response is not None else None
 
+        if status_code == 404:
+            logging.error("GitHub user '%s' was not found.", username)
+            raise RepoFetchError(f"User '{username}' does not exist on GitHub.") from error
+        elif status_code == 403:
+            logging.error(
+                "GitHub API access was denied or rate-limited for user '%s'.",
+                username,
+            )
+            raise RepoFetchError(
+                "GitHub denied the request or the API rate limit was reached. "
+                "Please try again later."
+            ) from error
+        else:
+            logging.error(
+                "GitHub API returned HTTP %s for user '%s'.",
+                status_code,
+                username,
+            )
+            raise RepoFetchError(
+                f"GitHub returned an unexpected HTTP error: {status_code}."
+            ) from error
+    except requests.exceptions.RequestException as error:
+        logging.error("Network error while fetching repos: %s", error)
+        raise RepoFetchError(
+            "A network error happened while contacting GitHub. Check your "
+            "internet connection and try again."
+        ) from error
+
+    logging.info("Fetched repo data for username: %s", username)
     return response.json()
 
 
@@ -61,6 +122,7 @@ def summarize_repos(repos: list[Repo]) -> RepoSummary | None:
 
 def display_summary(summary: RepoSummary | None) -> None:
     if summary is None:
+        logging.warning("No repo data available to summarize.")
         print("No repo data to analyze.")
         return
 
@@ -72,11 +134,17 @@ def display_summary(summary: RepoSummary | None) -> None:
 
 
 def main() -> None:
-    username = input("Enter GitHub username: ")
-    repo_data = fetch_repo_data(username)
-    repos = parse_repos(repo_data)
-    summary = summarize_repos(repos)
-    display_summary(summary)
+    try:
+        username = validate_username(input("Enter GitHub username: "))
+        repo_data = fetch_repo_data(username)
+        repos = parse_repos(repo_data)
+        summary = summarize_repos(repos)
+        display_summary(summary)
+    except InvalidUsernameError as error:
+        logging.error("Invalid input: %s", error)
+        print(error)
+    except RepoFetchError as error:
+        print(error)
 
 
 # Main execution
