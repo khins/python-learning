@@ -6,14 +6,14 @@ Python’s .split() is especially useful because, with no argument, it automatic
 '''
 
 def clean_name(name):
+    #word = name.split()
+    #cleaned_words = [w.strip().capitalize() for w in word]
+    cleaned_words = []
     words = name.split()
-    # Capitalize each word
+    
     for word in words:
-        print(word)
+        clean_word = word.capitalize()
+        cleaned_words.append(clean_word)
+    return ' '.join(cleaned_words)
 
-    # Join the words and return the result
-    
-    
-
-
-clean_name("  aLEX   johnSON  ")  # "Alex Johnson"
+print(clean_name("  aLEX   johnSON  "))  # "Alex Johnson"
