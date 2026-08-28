@@ -8,6 +8,11 @@ Contains at least one uppercase letter.
 Contains at least one lowercase letter.
 Contains at least one digit.
 You may use string methods, conditionals, and a loop
+
+Finish refactoring the password validator.
+Practice .isalpha(), .isalnum(), and .isspace().
+Combine parsing, validation, and formatting.
+Handle edge cases such as punctuation and empty strings.
 '''
 def is_valid_password(password_val):
     # Contains no spaces.
@@ -18,8 +23,7 @@ def is_valid_password(password_val):
     has_proper_length = False
     contains_space = False
 
-    if len(password_val) >= 8:
-        has_proper_length = True
+    has_proper_length = len(password_val) >= 8
 
     for character in password_val:
         
