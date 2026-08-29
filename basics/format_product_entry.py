@@ -24,18 +24,14 @@ Keep your else if that makes the control flow clearer.
 '''
 def format_product_entry(product):
     if product.count(":") != 1:
-        return "Invalid entry"
-
-    if len(product) == 0:
-        return "Invalid entry" 
-    
-    if len(product.split(":")) > 2:
-        return "Invalid entry"           
-    
+        return "Invalid entry"  
+           
     product_name, price = product.split(":")
+    product_name = product_name.strip()
+    price = price.strip()
  
-    if product_name.strip().isalpha() and price.strip().isdigit():
-        return f'{product_name.strip().capitalize()} costs ${price.strip()}'
+    if product_name.isalpha() and price.isdigit():
+        return f'{product_name.capitalize()} costs ${price}'
     else:
         return "Invalid entry"
         
