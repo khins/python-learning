@@ -20,20 +20,6 @@ def calculate_shipping(order_total, is_member):
         return 10
 
 
-
-    # 5 if the customer is a member and the order is at least $50.
-    if is_member and order_total >= 50:
-        if order_total > 100:
-            return 0
-        else:
-            return 5
-    elif order_total >= 100:
-        return 0
-    elif order_total < 0:
-        return "Invalid total"
-    else:
-        return 10  
-
 print(calculate_shipping(-5, True))    # Invalid total
 print(calculate_shipping(100, False))  # 0
 print(calculate_shipping(120, True))   # 0
