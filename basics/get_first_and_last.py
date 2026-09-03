@@ -10,18 +10,13 @@ Do not modify the original list.
 Use a negative index to access the final item.
 '''
 def get_first_and_last(mylist):
-    outlist = []
+    
     if len(mylist) == 0:
-        return outlist # blank list
-    list_count = len(mylist)
-    list_index = 0
-    for _ in mylist:
-        if list_index == 0:                   
-            outlist.append(mylist[list_index])
-        elif list_index == list_count - 1:
-            outlist.append(mylist[list_index])
-        list_index += 1
-    return outlist
+        return () # blank list
+
+    first_item = mylist[0]
+    last_item = mylist[-1]
+    return (first_item,last_item)
 
 
 print(get_first_and_last(["red", "green", "blue"]))
